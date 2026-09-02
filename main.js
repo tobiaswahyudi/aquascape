@@ -20,7 +20,7 @@ document.body.appendChild(renderer.domElement);
 const loader = new THREE.TextureLoader();
 const texture = loader.load("assets/fih1.png");
 // someTexture.offset.set(xOffset, yOffset);
-texture.colorSpace = THREE.SRGBColorSpace;
+// texture.colorSpace = THREE.SRGBColorSpace;
 
 ////////////////////////
 
@@ -70,6 +70,7 @@ function makeFish(w, h, seg, amp, freq, offset) {
       // color: new THREE.Color(i / seg, 1 - i / seg, 0, 0.5),
       map: newTex,
       side: THREE.DoubleSide,
+      transparent: true,
     });
 
     newTex.repeat = new THREE.Vector2(1 / seg, 1);
