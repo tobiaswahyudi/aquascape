@@ -1,4 +1,9 @@
 import * as THREE from "three";
+import Stats from "stats.js";
+
+const stats = new Stats();
+
+stats.showPanel(0);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -8,12 +13,13 @@ const camera = new THREE.PerspectiveCamera(
   1000,
 );
 
-camera.position.set(0, 5, 10);
+camera.position.set(0, 10, 20);
 camera.lookAt(0, 0, 0);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+document.body.appendChild(stats.dom);
 
 ////////////////////////
 
@@ -145,7 +151,7 @@ function makeFish(w, h, seg, amp, freq, offset) {
 
 const fishes = [];
 
-for(let i = 0; i < 20; i++) {
+for (let i = 0; i < 40; i++) {
   const w = Math.random() * 3 + 1;
   const freq = Math.random() * 1.2 + 0.3;
   const offset = Math.random() * Math.PI;
@@ -161,6 +167,7 @@ for(let i = 0; i < 20; i++) {
 }
 
 function animate(time) {
+  stats.begin();
 
   fishes.forEach((fish) => {
     const angle = time * 0.00012 * fish.freq + 2 * fish.offset;
@@ -171,5 +178,7 @@ function animate(time) {
     fish.mesh.rotation.y = Math.PI + angle;
   });
   renderer.render(scene, camera);
+  
+  stats.end();
 }
 renderer.setAnimationLoop(animate);
