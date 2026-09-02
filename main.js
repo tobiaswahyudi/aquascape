@@ -64,6 +64,8 @@ function makeFish(w, h, seg, amp, freq, offset) {
 
   console.log(w, h, seg);
 
+  const mesh = new THREE.Group();
+
   for (let i = 0; i < seg; i++) {
     const newTex = texture.clone();
     const material = new THREE.MeshBasicMaterial({
@@ -92,11 +94,8 @@ function makeFish(w, h, seg, amp, freq, offset) {
     console.log(children);
   }
 
-  const head = children[0];
-  scene.add(head);
-
-  let posX = 0;
-  let posY = 0;
+  mesh.add(children[0]);
+  scene.add(mesh);
 
   const render = (time) => {
     const q = w / seg;
@@ -106,13 +105,13 @@ function makeFish(w, h, seg, amp, freq, offset) {
     const tt = time * timeConst;
 
     let last_x = 0;
-    let last_y = fishSine(0, tt, freq, offset);
+    let last_y = amp * fishSine(0, tt, freq, offset);
 
-    head.position.y = posY + last_y;
+    children[0].position.y = last_y;
 
     children.forEach((c, i) => {
       const nx = nextFishPoint(last_x, last_y, tt, q);
-      const ny = fishSine(nx, tt, freq, offset);
+      const ny = amp * fishSine(nx, tt, freq, offset);
 
       c.rotation.y = Math.atan2(ny - last_y, nx - last_x);
 
@@ -121,23 +120,24 @@ function makeFish(w, h, seg, amp, freq, offset) {
     });
   };
 
-  const setPos = (x = 0, y = 0, z = 0) => {
-    // posX = x;
-    posY = y;
-    head.position.x = x;
-    head.position.z = z;
-  }
+  const setPos = (x, y, z) => {
+    if (x instanceof Object) {
+      y = x.y;
+      z = x.z;
+      x = x.x;
+    }
+    if (x) mesh.position.x = x;
+    if (y) mesh.position.y = y;
+    if (z) mesh.position.z = z;
+  };
 
   return {
-    w,
-    h,
-    seg,
-    amp,
     freq,
-    children,
-    mesh: head,
+    w,
+    mesh,
+    offset,
     render,
-    setPos
+    setPos,
   };
 }
 
@@ -147,11 +147,15 @@ const fishes = [];
 
 for(let i = 0; i < 20; i++) {
   const w = Math.random() * 3 + 1;
-  const freq = Math.random() * 10 + 0.1
-  const offset = Math.random() *  Math.PI
-  const fish = makeFish(w, w/4, 5, w/4, 1, freq, offset);
+  const freq = Math.random() * 1.2 + 0.3;
+  const offset = Math.random() * Math.PI;
+  const fish = makeFish(w, w / 4, 5, w / 4, freq, offset);
 
-  fish.setPos((Math.random() * 2 - 1) * 5, (Math.random() * 2 - 1) * 8, (Math.random() * 2 - 1) * 3)
+  fish.setPos(
+    (Math.random() * 2 - 1) * 5,
+    (Math.random() * 2 - 1) * 8,
+    (Math.random() * 2 - 1) * 3,
+  );
 
   fishes.push(fish);
 }
