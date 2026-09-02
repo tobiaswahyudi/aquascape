@@ -1,0 +1,74 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+    color: aqua;
+}
+
+body {
+    background-color: #000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    height: 100vh;
+
+    color: white;
+}
+
+#canvas {
+    display: block;
+    cursor: crosshair;
+    width: min(100vh, 60vw);
+    height: min(100vh, 60vw);
+}
+
+#sidebar {
+    flex: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.group {
+    min-height: 10vh;
+    padding-bottom: 1rem;
+}
+
+.time-button {
+    font-size: 3rem;
+    background: none;
+    border: none;
+
+    cursor: pointer;
+    margin-right: 0.2em;
+}
+
+#rules-group {
+    flex: 1;
+}
+
+#rules-table {
+    width: 100%;
+}
+
+#rules-table td {
+    border: 1px solid white;
+    text-align: center;
+}
+
+input {
+    min-width: none;
+    width: 100%;
+}
+
+button.export {
+    padding: 0.2em;
+}
+
+#export-indicator {
+    opacity: 0;
+}

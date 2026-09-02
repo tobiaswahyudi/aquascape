@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "three": "^0.185.1",
+    "vite": "^8.2.2"
+  },
+  "name": "aquascape",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
