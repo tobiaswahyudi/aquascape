@@ -161,7 +161,15 @@ for(let i = 0; i < 20; i++) {
 }
 
 function animate(time) {
-  fishes.forEach(fish => fish.render(time));
+
+  fishes.forEach((fish) => {
+    const angle = time * 0.00012 * fish.freq + 2 * fish.offset;
+    const x = Math.sin(angle) * fish.w * 4;
+    const z = Math.cos(angle) * fish.w * 4;
+    fish.render(time);
+    fish.setPos({ x, z });
+    fish.mesh.rotation.y = Math.PI + angle;
+  });
   renderer.render(scene, camera);
 }
 renderer.setAnimationLoop(animate);
