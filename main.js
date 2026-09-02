@@ -151,7 +151,7 @@ function makeFish(w, h, seg, amp, freq, offset) {
 
 const fishes = [];
 
-for (let i = 0; i < 40; i++) {
+for (let i = 0; i < 80; i++) {
   const w = Math.random() * 3 + 1;
   const freq = Math.random() * 1.2 + 0.3;
   const offset = Math.random() * Math.PI;
@@ -178,7 +178,7 @@ function animate(time) {
     fish.mesh.rotation.y = Math.PI + angle;
   });
   renderer.render(scene, camera);
-  
+
   stats.end();
 }
 renderer.setAnimationLoop(animate);
