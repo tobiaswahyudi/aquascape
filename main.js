@@ -113,7 +113,7 @@ function makeFish(w, h, seg, amp, freq, offset) {
     let last_x = 0;
     let last_y = amp * fishSine(0, tt, freq, offset);
 
-    children[0].position.y = last_y;
+    children[0].position.z = - amp * last_y;
 
     children.forEach((c, i) => {
       const nx = nextFishPoint(last_x, last_y, tt, q);
@@ -151,11 +151,11 @@ function makeFish(w, h, seg, amp, freq, offset) {
 
 const fishes = [];
 
-for (let i = 0; i < 80; i++) {
+for (let i = 0; i < 100; i++) {
   const w = Math.random() * 3 + 1;
   const freq = Math.random() * 1.2 + 0.3;
   const offset = Math.random() * Math.PI;
-  const fish = makeFish(w, w / 4, 5, w / 4, freq, offset);
+  const fish = makeFish(w, w / 4, 5, w / 6, freq, offset);
 
   fish.setPos(
     (Math.random() * 2 - 1) * 5,
