@@ -24,7 +24,7 @@ document.body.appendChild(stats.dom);
 ////////////////////////
 
 const loader = new THREE.TextureLoader();
-const texture = loader.load("assets/fih1.png");
+// const texture = loader.load("assets/fih1.png");
 // someTexture.offset.set(xOffset, yOffset);
 // texture.colorSpace = THREE.SRGBColorSpace;
 
@@ -61,6 +61,39 @@ function nextFishPoint(x, y, t, q, f, o) {
 
 /////////////////////////
 
+const fishTextures = {};
+const fishSegments = {};
+
+function getFishTexture(name) {
+  if (!(name in fishTextures)) fishTextures[name] = loader.load(name);
+  return fishTextures[name];
+}
+
+function getFishSegment(name, segments, index) {
+  if(!(name in fishSegments)) {
+    fishSegments[name] = {}
+  }
+
+  if (!(segments in fishSegments[name])) {
+    fishSegments[name][segments] = new Array(segments);
+  }
+
+  if (fishSegments[name][segments][index]) return fishSegments[name][segments][index];
+
+  const newTex = getFishTexture(name).clone();
+  const material = new THREE.MeshBasicMaterial({
+    map: newTex,
+    side: THREE.DoubleSide,
+    transparent: true,
+  });
+
+  newTex.repeat = new THREE.Vector2(1 / segments, 1);
+  newTex.offset = new THREE.Vector2(index / segments, 0);
+
+  fishSegments[name][segments][index] = material;
+  return material;
+}
+
 function makeFish(w, h, seg, amp, freq, offset) {
   const children = [];
   /** @type {THREE.Mesh} */
@@ -72,17 +105,12 @@ function makeFish(w, h, seg, amp, freq, offset) {
 
   const mesh = new THREE.Group();
 
-  for (let i = 0; i < seg; i++) {
-    const newTex = texture.clone();
-    const material = new THREE.MeshBasicMaterial({
-      // color: new THREE.Color(i / seg, 1 - i / seg, 0, 0.5),
-      map: newTex,
-      side: THREE.DoubleSide,
-      transparent: true,
-    });
+  const randomParam = Math.random() > 0.5
+  const randomMaterial = randomParam ? "assets/fih2.png" : "assets/fih1.png";
+  if(randomParam) w *= 0.5
 
-    newTex.repeat = new THREE.Vector2(1 / seg, 1);
-    newTex.offset = new THREE.Vector2(i / seg, 0);
+  for (let i = 0; i < seg; i++) {
+    const material = getFishSegment(randomMaterial, seg, i);
 
     const pivot = new THREE.Group();
 
@@ -113,7 +141,7 @@ function makeFish(w, h, seg, amp, freq, offset) {
     let last_x = 0;
     let last_y = amp * fishSine(0, tt, freq, offset);
 
-    children[0].position.z = - amp * last_y;
+    children[0].position.z = -2 * amp * last_y;
 
     children.forEach((c, i) => {
       const nx = nextFishPoint(last_x, last_y, tt, q);
@@ -165,6 +193,12 @@ for (let i = 0; i < 100; i++) {
 
   fishes.push(fish);
 }
+
+// Terrain
+
+const planeGeometry = new THREE.PlaneGeometry(3.6, 1.8, 180, 90);
+
+// Draw
 
 function animate(time) {
   stats.begin();
